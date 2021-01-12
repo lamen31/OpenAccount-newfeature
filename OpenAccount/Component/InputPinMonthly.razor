@@ -18,14 +18,13 @@
                 <div>
                     @*<span class="badge badge-primary" style="margin-bottom: 2rem; font-size: 20px;">Cetak Histori Transaksi</span><br>*@
                     <teks>Silakan Masukkan PIN Anda</teks>
-                    <h3 style="color: #00529C; font-size: 25px;">"Tekan “ENTER” jika selesai memasukkan PIN"</h3>
+                    <h3 style="color: #00529C; font-size: 25px;">Setelah Ada Perintah Input Pin Pada Layar EDC</h3>
                     @*<input type="password" class="form-control" placeholder="Masukan Pin Anda" @bind="strpin">*@
                     <teks style="align-content:center">@strpinMask</teks>
                     @if (isSalah)
                     {
-                        <h3 style="color: #ff0000; font-size: 20px; margin-top:20%;">PIN yang anda masukan <b>SALAH</b>.</h3>
-                        <h3 style="color: #ff0000; font-size: 20px; font-style:italic">Kesempatan mencoba @tryLimit.ToString()x lagi</h3>
-                    }
+                <h3 style="color: #ff0000; font-size: 20px; margin-top:20%;">PIN yang anda masukan <b>SALAH</b>.</h3>
+                                <h3 style="color: #ff0000; font-size: 20px; font-style:italic">Kesempatan mencoba @tryLimit.ToString()x lagi</h3>}
                 </div>
             </div>
             <div class="col-xl-6 order-1 order-lg-2 hero-img" data-aos="fade-left">
@@ -144,6 +143,7 @@
     private bool isBlocked = false;
     private bool isFailed = false;
     private bool isAccountInquiry = false;
+    private bool isCIFInquiry = false;
     private bool isReadPin = false;
     private int tryLimit = 3;
 
@@ -196,12 +196,22 @@
                         //isInquiry = true;
                         if (isInquiry)
                         {
-                            await ServiceRekening();
-                            if (isAccountInquiry)
+                            await InquiryCIFByAcct();
+                            if (isCIFInquiry)
                             {
-                                await InquiryCIFByAcct();
-                                OnClick.InvokeAsync("newhome");
+                                trx._AccountNumber2 = trx._AccountNumber;
+                                OnClick.InvokeAsync("konfirmasiawal");
                                 return;
+                            }
+                            else
+                            {
+                                await ServiceRekening();
+                                if (isAccountInquiry)
+                                {
+                                    trx._AccountNumber2 = trx._AccountNumber;
+                                    OnClick.InvokeAsync("newhome");
+                                    return;
+                                }
                             }
                         }
                         else

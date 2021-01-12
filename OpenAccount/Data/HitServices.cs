@@ -234,7 +234,43 @@ namespace OpenAccount.Data
             //    return errormessage;
             //}
         }
+        public static async Task<string> CopyReport(Transaksi trx, Config config)
+        {
+            //string error;
+            //string errorcode;
+            //string errormessage;
+            //try
+            //{
+            string myLink = config.Read("LINK", Config.PARAM_SERVICES_REPORT);
+            string myUrl = myLink + "notif/emailreport";
+            //if (!RegexUtilities.IsValidEmail(trx.emailNasabah))
+            //{
+            //    return "Format Email Tidak Valid";
+            //}
+            CopyData copydata = new CopyData
+            {
+                filename = trx.reportPath,
+            };
 
+            var _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true, };
+
+            var content = new StringContent(
+                JsonSerializer.Serialize(copydata, _jsonSerializerOptions),
+                Encoding.UTF8, "application/json");
+
+            return await CallAPI(myUrl, content, "POST");
+            //}
+            //catch(Exception ex)
+            //{
+            //    //tambahan
+            //    errorcode = "ReportError";
+            //    errormessage = "SendDataReportError";
+            //    error = ex.Message;
+            //    //return;
+            //    trx.reportStatus = "FAILED";
+            //    return errormessage;
+            //}
+        }
         public static async Task<string> SendSms(Transaksi trx, Config config)
         {
             string myLink = config.Read("LINK", Config.PARAM_SERVICES_LINK);

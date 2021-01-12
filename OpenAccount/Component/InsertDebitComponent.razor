@@ -238,6 +238,7 @@
 
         Utility.WriteLog("Home condition : EDC serial port write", "step-action");
         serialPort.Write(data2_with_lrc, 0, data2_with_lrc.Length);
+        await Task.Delay(2000);
         isLoading = false;
         await Task.Delay(100);
         StateHasChanged();
